@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: avetis2003/mini-order-processing-system:latest
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      NODE_ENV: development
+      MONGODB_URI: mongodb://mongo:27017/order_processing?replicaSet=rs0
+      JWT_SECRET: change-me
+      JWT_EXPIRES_IN: 1d
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  mongo:
+    image: avetis2003/mini-order-processing-system-mongo:7
+    platform: linux/amd64
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: echo "try { rs.status() } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}) }" | mongosh --quiet
+      interval: 5s
+      timeout: 30s
+      retries: 20
+
+  redis:
+    image: avetis2003/mini-order-processing-system-redis:7-alpine
+    ports:
+      - "6379:6379"
+volumes:
+  mongo-data:
