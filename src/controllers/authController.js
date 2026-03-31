@@ -18,18 +18,25 @@ async function register(req, res, next) {
     const user = await User.create({
       name,
       email,
-      password
+      password,
     });
 
     const token = generateToken(user);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 60 * 60 * 1000,
+    });
 
     return res.status(201).json({
       user: {
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
       },
-      token
+      token,
     });
   } catch (error) {
     return next(error);
@@ -51,13 +58,20 @@ async function login(req, res, next) {
 
     const token = generateToken(user);
 
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 60 * 60 * 1000,
+    });
+
     return res.json({
       user: {
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
       },
-      token
+      token,
     });
   } catch (error) {
     return next(error);

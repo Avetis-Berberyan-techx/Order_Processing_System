@@ -11,8 +11,8 @@ services:
     environment:
       PORT: 3000
       NODE_ENV: development
-      MONGODB_URI: mongodb://mongo:27017/order_processing?replicaSet=rs0
-      JWT_SECRET: change-me
+      MONGODB_URI: mongodb+srv://avetisberberyan72_db_user:avo20032003@cluster0.3kz8kkt.mongodb.net/order_processing
+      JWT_SECRET: avo20032003
       JWT_EXPIRES_IN: 1d
       REDIS_URL: redis://redis:6379
     depends_on:
