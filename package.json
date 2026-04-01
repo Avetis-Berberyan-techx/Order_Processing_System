@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
+    "infra:up": "docker compose up -d mongo redis",
+    "redis:up": "docker compose up -d redis",
+    "redis:check": "node scripts/checkRedis.js",
     "test": "jest --runInBand",
     "test:concurrency": "jest --runInBand tests/app.test.js --testNamePattern=\"prevents overselling under concurrent order requests\"",
     "lint:check": "node --check src/server.js"

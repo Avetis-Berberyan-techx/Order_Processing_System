@@ -1,5 +1,5 @@
 const Redis = require("ioredis");
-
+require("dotenv").config();
 let redis;
 
 function getRedisClient() {
@@ -14,7 +14,7 @@ function getRedisClient() {
 
   redis = new Redis(redisUrl, {
     lazyConnect: true,
-    maxRetriesPerRequest: 1
+    maxRetriesPerRequest: 1,
   });
 
   redis.on("error", (error) => {
